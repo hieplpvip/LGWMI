@@ -67,7 +67,7 @@ int LGWMI::lg_wmab(uint32_t method_id, uint32_t arg1, uint32_t arg2) {
     params[2]->release();
 
     if (ret != kIOReturnSuccess) {
-        DBGLOG("wmi", "wmi_evaluate_method failed");
+        DBGLOG("wmi", "lg_wmab failed");
         return -1;
     }
 
@@ -93,19 +93,19 @@ void LGWMI::registerVSMC() {
 
 bool LGWMI::vsmcNotificationHandler(void *sensors, void *refCon, IOService *vsmc, IONotifier *notifier) {
     if (sensors && vsmc) {
-        DBGLOG("als", "got vsmc notification");
+        DBGLOG("wmi", "got vsmc notification");
         auto self = static_cast<LGWMI *>(sensors);
         auto ret = vsmc->callPlatformFunction(VirtualSMCAPI::SubmitPlugin, true, sensors, &self->vsmcPlugin, nullptr, nullptr);
         if (ret == kIOReturnSuccess) {
-            DBGLOG("als", "Submitted plugin");
+            DBGLOG("wmi", "Submitted plugin");
             return true;
         } else if (ret != kIOReturnUnsupported) {
-            SYSLOG("als", "Plugin submission failure %X", ret);
+            SYSLOG("wmi", "Plugin submission failure %X", ret);
         } else {
-            DBGLOG("als", "Plugin submission to non vsmc");
+            DBGLOG("wmi", "Plugin submission to non vsmc");
         }
     } else {
-        SYSLOG("als", "Got null vsmc notification");
+        SYSLOG("wmi", "Got null vsmc notification");
     }
 
     return false;
