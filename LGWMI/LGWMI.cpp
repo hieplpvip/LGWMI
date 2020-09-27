@@ -23,7 +23,7 @@ IOService *LGWMI::probe(IOService *provider, SInt32 *score) {
         return NULL;
     }
 
-    if (mapDevice->validateObject("WMAB") != kIOReturnSuccess) {
+    if (mapDevice->validateObject("WMAB") != kIOReturnSuccess || mapDevice->validateObject("WMBB") != kIOReturnSuccess) {
         return NULL;
     }
 
@@ -74,12 +74,56 @@ int LGWMI::lg_wmab(uint32_t method_id, uint32_t arg1, uint32_t arg2) {
     return val;
 }
 
-void LGWMI::toggleBatteryConservativeMode(bool state) {
+int LGWMI::lg_wmbb(uint32_t method_id, uint32_t arg1, uint32_t arg2) {
+    uint8_t buf[32];
+    *(uint32_t *)(buf     ) = method_id;
+    *(uint32_t *)(buf + 4 ) = arg1;
+    *(uint32_t *)(buf + 16) = arg2;
+
+    OSObject *params[3];
+
+    params[0] = OSNumber::withNumber(0ull, 32); // ignored
+    params[1] = OSNumber::withNumber(1ull, 32); // Must be 1 or 2. Does not matter which
+    params[2] = OSData::withBytes(buf, 32);
+
+    uint32_t val;
+    IOReturn ret = mapDevice->evaluateInteger("WMBB", &val, params, 3);
+    params[0]->release();
+    params[1]->release();
+    params[2]->release();
+
+    if (ret != kIOReturnSuccess) {
+        DBGLOG("wmi", "lg_wmbb failed");
+        return -1;
+    }
+
+    return val;
+}
+
+void LGWMI::setBatteryConservativeMode(bool state) {
     if (lg_wmab(WM_BATT_LIMIT, WM_SET, state ? 80 : 100) != 0) {
         SYSLOG("batt", "Failed to %s battery conservative mode", state ? "enable" : "disable");
     } else {
         DBGLOG("batt", "Battery conservative mode is %s", state ? "enabled" : "disabled");
         setProperty("BatteryConservativeMode", state);
+    }
+}
+
+void LGWMI::setFnLockMode(bool state) {
+    if (lg_wmab(WM_FN_LOCK, WM_SET, state) != 0) {
+        SYSLOG("batt", "Failed to %s Fn lock", state ? "enable" : "disable");
+    } else {
+        DBGLOG("batt", "Fn lock is %s", state ? "enabled" : "disabled");
+        setProperty("FnLockMode", state);
+    }
+}
+
+void LGWMI::setUSBChargeMode(bool state) {
+    if (lg_wmbb(WMBB_USB_CHARGE, WM_SET, state) != 0) {
+        SYSLOG("batt", "Failed to %s USB charge mode", state ? "enable" : "disable");
+    } else {
+        DBGLOG("batt", "USB charge mode is %s", state ? "enabled" : "disabled");
+        setProperty("USBChargeMode", state);
     }
 }
 

@@ -12,6 +12,8 @@
 		4C4FE6272156A1690074AD08 /* LGWMI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FE6262156A1690074AD08 /* LGWMI.cpp */; };
 		4C4FE6C02156A5820074AD08 /* KeyImplementations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FE6BE2156A5820074AD08 /* KeyImplementations.cpp */; };
 		4C4FE6C12156A5820074AD08 /* KeyImplementations.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FE6BF2156A5820074AD08 /* KeyImplementations.hpp */; };
+		4C79ABE925214E180058D9A8 /* LGWMIUserClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C79ABE725214E180058D9A8 /* LGWMIUserClient.cpp */; };
+		4C79ABEA25214E180058D9A8 /* LGWMIUserClient.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 4C79ABE825214E180058D9A8 /* LGWMIUserClient.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,8 +78,9 @@
 		4C4FE6BE2156A5820074AD08 /* KeyImplementations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyImplementations.cpp; sourceTree = "<group>"; };
 		4C4FE6BF2156A5820074AD08 /* KeyImplementations.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KeyImplementations.hpp; sourceTree = "<group>"; };
 		4C4FE6C22156AA810074AD08 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		4C5B23712520BB0E00BE11F8 /* MacKernelSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacKernelSDK; sourceTree = "<group>"; };
 		4C5B23722520BB1C00BE11F8 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
+		4C79ABE725214E180058D9A8 /* LGWMIUserClient.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LGWMIUserClient.cpp; sourceTree = "<group>"; };
+		4C79ABE825214E180058D9A8 /* LGWMIUserClient.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LGWMIUserClient.hpp; sourceTree = "<group>"; };
 		4CDDD8C822E899F700CC38F4 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,7 +106,6 @@
 				4C4FE6C22156AA810074AD08 /* README.md */,
 				4CDDD8C822E899F700CC38F4 /* CHANGELOG.md */,
 				4C27D2BF218B647F0089409B /* LICENSE.md */,
-				4C4FE6282156A1690074AD08 /* Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -120,8 +122,11 @@
 			children = (
 				4C4FE6262156A1690074AD08 /* LGWMI.cpp */,
 				4C4FE6242156A1690074AD08 /* LGWMI.hpp */,
+				4C79ABE725214E180058D9A8 /* LGWMIUserClient.cpp */,
+				4C79ABE825214E180058D9A8 /* LGWMIUserClient.hpp */,
 				4C4FE6BE2156A5820074AD08 /* KeyImplementations.cpp */,
 				4C4FE6BF2156A5820074AD08 /* KeyImplementations.hpp */,
+				4C4FE6282156A1690074AD08 /* Info.plist */,
 			);
 			path = LGWMI;
 			sourceTree = "<group>";
@@ -209,7 +214,6 @@
 			isa = PBXGroup;
 			children = (
 				4C5B23722520BB1C00BE11F8 /* libkmod.a */,
-				4C5B23712520BB0E00BE11F8 /* MacKernelSDK */,
 				4C4FCB29232688390010505E /* AppKit.framework */,
 				4C4FCB272326880C0010505E /* CoreServices.framework */,
 				4C4FE6B72156A4A70074AD08 /* CoreWLAN.framework */,
@@ -225,6 +229,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C79ABEA25214E180058D9A8 /* LGWMIUserClient.hpp in Headers */,
 				4C4FE6252156A1690074AD08 /* LGWMI.hpp in Headers */,
 				4C4FE6C12156A5820074AD08 /* KeyImplementations.hpp in Headers */,
 			);
@@ -321,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C79ABE925214E180058D9A8 /* LGWMIUserClient.cpp in Sources */,
 				4C4FE6272156A1690074AD08 /* LGWMI.cpp in Sources */,
 				4C4FE6C02156A5820074AD08 /* KeyImplementations.cpp in Sources */,
 			);
@@ -461,7 +467,7 @@
 					"$(PROJECT_DIR)/VirtualSMC.kext/Contents/Resources/",
 					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources/",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = LGWMI/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources/Library",
@@ -492,7 +498,7 @@
 					"$(PROJECT_DIR)/VirtualSMC.kext/Contents/Resources/",
 					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources/",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = LGWMI/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources/Library",

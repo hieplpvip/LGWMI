@@ -32,6 +32,8 @@
 			<integer>9999</integer>
 			<key>IOProviderClass</key>
 			<string>IOACPIPlatformDevice</string>
+			<key>IOUserClientClass</key>
+			<string>LGWMIUserClient</string>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>

@@ -16,7 +16,7 @@ SMC_RESULT BDVT::update(const SMC_DATA *src)  {
     state = !state;
 
     LGWMI *drv = OSDynamicCast(LGWMI, dst);
-    drv->toggleBatteryConservativeMode(state);
+    drv->setBatteryConservativeMode(state);
 
     lilu_os_memcpy(data, src, size);
     return SmcSuccess;
