@@ -1,0 +1,61 @@
+language: cpp
+
+matrix:
+  include:
+  - os: osx
+    name: "Build"
+    osx_image: xcode11.6
+    compiler: clang
+
+    script:
+      - git clone https://github.com/acidanthera/MacKernelSDK
+      - src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/hieplpvip/AsusSMC/master/Scripts/bootstrap.sh) && eval "$src" || exit 1
+      - xcodebuild -jobs 1 -configuration Debug
+      - xcodebuild -jobs 1 -configuration Release
+
+    deploy:
+      provider: releases
+      skip_cleanup: true
+      file: "build/*/*.zip"
+      file_glob: true
+      api_key:
+        secure: bZ4Es2/Cifpy6zmnX4Iz5wAQXTEixc/cXMqJiuPDW1wQnTVxNRrXEFkNlIjK/b83r2vxeFOwmhyRYeyYxQa3ILc89BTnTCun2/PALLYKspr2DvLv+Vt6gn530czdizgJeI7NPRjYyVbwqrebdE6jlCGFmcpN8XRr62x+hvbGUovU05kxvKOrpPHrr/aJc25Bb8Dvzz9V4g7qiYQe+qOnAWGXnDup827OiXUjuifjyZXaSmV/O6VIhFh5V08vVinF5iIzClHIeX4AdC3g/cBy3y4AfMYZoykzWyw6tOraw4ragV4ufXf3+FjhsOWK351vLR02dU/Aq7sUUZvcPvf0z4b69XIhD3knh0iuXaKv5ZSzQviAP1hgpn8xRiDlqWQ1vC6dihYMO35Ac2dH9vv23dvzRnBvVESkKwOJLvwpIeSDIwKqIl6EkXey2XjjT+4lPpQdPx0nRYavBlGXVLv3wDJqQTCGX2gg3B/eL3Z7F0LXjOC23jNnCHFUY/Np/TizjJDFrL42FNLcXQNQpfTruxOaK0wmOjvI9Psomtb6t8ZI4Zo32yXBC0tRhI7q4srgHGNctcP5/GKNCJ8IqC+OhIVLTaAZ36vz6k5M21gyXIfzG2EdxjEQP5O8ClcJpZ1DMMxbDmmzEPA2cqoKuxnF5vENsKJB0MVkoaqncS58NnQ=
+      on:
+        tags: true
+
+  - os: osx
+    name: "Analyze Clang"
+    osx_image: xcode11
+    compiler: clang
+
+    script:
+      - git clone https://github.com/acidanthera/MacKernelSDK
+      - src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/hieplpvip/AsusSMC/master/Scripts/bootstrap.sh) && eval "$src" || exit 1
+      - xcodebuild analyze -quiet -configuration Debug CLANG_ANALYZER_OUTPUT=plist-html CLANG_ANALYZER_OUTPUT_DIR="$(pwd)/clang-analyze" && [ "$(find clang-analyze -name "*.html")" = "" ]
+      - xcodebuild analyze -quiet -configuration Release CLANG_ANALYZER_OUTPUT=plist-html CLANG_ANALYZER_OUTPUT_DIR="$(pwd)/clang-analyze" && [ "$(find clang-analyze -name "*.html")" = "" ]
+
+  - os: osx
+    name: "Analyze Coverity"
+    osx_image: xcode10.2
+    compiler: clang
+
+    before_install:
+      - git clone https://github.com/acidanthera/MacKernelSDK
+      - curl -Ls https://entrust.com/root-certificates/entrust_l1k.cer -o ~/entrust_l1k.crt || exit 1
+      - curl -LS https://curl.haxx.se/ca/cacert.pem -o ~/cacert.pem || exit 1
+      - cat ~/entrust_l1k.crt >> ~/cacert.pem || exit 1
+      - echo "cacert=\"$HOME/cacert.pem\"" > ~/.curlrc || exit 1
+      - echo "ca_certificate=$HOME/cacert.pem" > ~/.wgetrc || exit 1
+
+    script:
+      - echo "This script runs coverity..."
+
+    addons:
+      coverity_scan:
+        project:
+          name: "hieplpvip/LGWMI"
+          description: "LGWMI"
+        notification_email: $NOTIFICATION_EMAIL
+        build_command_prepend: "src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/hieplpvip/AsusSMC/master/Scripts/bootstrap.sh) && eval \"$src\" || exit 1 ; src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/Lilu/master/Lilu/Scripts/covstrap.sh) && eval \"$src\" || exit 1"
+        build_command: "xcodebuild -configuration Release"
+        branch_pattern: master
