@@ -22,7 +22,6 @@ private:
 
 public:
     virtual bool start(IOService *provider) override;
-    virtual void stop(IOService *provider) override;
     virtual void free() override;
 
     virtual IOReturn clientClose() override;

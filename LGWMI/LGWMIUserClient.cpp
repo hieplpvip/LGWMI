@@ -12,20 +12,19 @@
 OSDefineMetaClassAndStructors(LGWMIUserClient, IOUserClient);
 
 bool LGWMIUserClient::start(IOService *provider) {
-    IOLog("LGWMIUserClient: Starting...\n");
-    if (!super::start(provider))
+    if (!super::start(provider)) {
         return false;
+    }
 
     mDevice = OSDynamicCast(LGWMI, provider);
+    if (!mDevice) {
+        return false;
+    }
+
     mDevice->retain();
 
     return true;
 }
-
-void LGWMIUserClient::stop(IOService *provider) {
-    IOLog("MacMSRUserClient: Stopping...\n");
-    super::stop(provider);
-};
 
 void LGWMIUserClient::free(void) {
     mDevice->release();
